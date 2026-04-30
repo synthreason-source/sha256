@@ -1,6 +1,6 @@
 // ═ QUANTUM PoW MINER — FULL CUDA GPU (GH/s SPEED) ═══════════════════════════════
 // nvcc -O3 -arch=sm_75 pow_miner.cu -o pow_miner -lssl -lcrypto
-// ./pow_miner [bits=25] [diff=20] [grid=4096] [block=256]
+// ./pow_miner [bits=25] [diff=20] [grid=4096] [block=256] [header="..."]
 // ════════════════════════════════════════════════════════════════════════════════
 
 #include <iostream>
@@ -264,17 +264,19 @@ std::vector<uint64_t> gpu_mine() {
     return results;
 }
 
-// ── MAIN ─────────────────────────────────────────────────────────────────────────
+
 int main(int argc, char* argv[]) {
     N_BITS    = (argc > 1) ? (uint64_t)std::atoi(argv[1]) : 25;
     DIFF_BITS = (argc > 2) ? (uint64_t)std::atoi(argv[2]) : 20;
     GRID_SIZE = (argc > 3) ? (uint64_t)std::atoi(argv[3]) : 4096;
     BLOCK_SIZE= (argc > 4) ? (uint64_t)std::atoi(argv[4]) : 256;
+    if (argc > 5) BLOCK_HEADER = argv[5];
     N = 1ULL << N_BITS;
 
     std::cout << "GPU QUANTUM MINER — GH/s BEAST\n";
     std::cout << "N_BITS=" << N_BITS << " | DIFF=" << DIFF_BITS
-              << " leading zero bits | Grid=" << GRID_SIZE << "x" << BLOCK_SIZE << "\n\n";
+              << " leading zero bits | Grid=" << GRID_SIZE << "x" << BLOCK_SIZE << "\n";
+    std::cout << "Header: \"" << BLOCK_HEADER << "\"\n\n";
 
     // GPU check
     int deviceCount = 0;
